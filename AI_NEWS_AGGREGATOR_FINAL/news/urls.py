@@ -1,0 +1,23 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('submit-feedback/', views.submit_feedback, name='submit_feedback'),  # <- important!
+]
+
+
+from django.contrib.auth import views as auth_views
+from .views import signup_view
+
+urlpatterns += [
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('signup/', signup_view, name='signup'),
+]
+
+from .views import save_article
+
+urlpatterns += [
+    path('save_article/', save_article, name='save_article'),
+]
