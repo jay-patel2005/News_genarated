@@ -1,1 +1,1 @@
-web: gunicorn AI_NEWS_AGGREGATOR_FINAL.AI_NEWS_AGGREGATOR.wsgi
+web: gunicorn AI_NEWS_AGGREGATOR.wsgi
