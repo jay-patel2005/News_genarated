@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'your-secret-key'
-DEBUG = True
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('1', 'true', 'yes')
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -57,4 +57,18 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Use WhiteNoise to serve compressed, cached static files in production
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+# Fallback for older Django versions/environments
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Honor X-Forwarded-Proto when behind a proxy (Render/Heroku)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
