@@ -4,7 +4,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('1', 'true', 'yes')
-ALLOWED_HOSTS = ['*']
+raw_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(',')] if raw_hosts else []
+
+raw_csrf = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')
+if raw_csrf:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in raw_csrf.split(',')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
